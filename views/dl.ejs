@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DarkApps - <%= file.name %></title>
+    <script async src="//www.popads.net/pop.js"></script>
+    <style>
+        body{background:linear-gradient(135deg,#000,#1a0033);color:#00ff88;font-family:'Courier New';text-align:center;padding:50px;}
+        .dlbox{background:rgba(0,0,0,0.9);max-width:600px;margin:0 auto;padding:50px;border:3px solid #00ff88;border-radius:20px;}
+        h1{font-size:2.5em;margin-bottom:20px;text-shadow:0 0 30px #00ff88;}
+        #timer{font-size:8em;background:linear-gradient(45deg,#ff0080,#ff6600);color:#000;border-radius:50%;width:250px;height:250px;margin:40px auto;display:flex;align-items:center;justify-content:center;font-weight:bold;}
+        @media(max-width:768px){#timer{font-size:5em;width:200px;height:200px;}}
+    </style>
+</head>
+<body>
+    <div class="dlbox">
+        <h1>📱 <%= file.name %></h1>
+        <p style="font-size:1.3em;margin:20px 0;"><%= Math.round(file.size/1024/1024) %> MB</p>
+        <div id="countdown" style="display:none;">
+            <div id="timer">15</div>
+            <p style="font-size:1.5em;">⏳ Aguarde anúncios...</p>
+        </div>
+        <button id="dlbtn" onclick="startDL()">🚀 BAIXAR</button>
+    </div>
+    <script>
+        let time=15;function startDL(){document.getElementById('dlbtn').style.display='none';document.getElementById('countdown').style.display='block';let intv=setInterval(()=>{time--;document.getElementById('timer').textContent=time;if(time<=0){clearInterval(intv);window.location.href='/dl/<%= file.id %>/download';}},1000);}
+    </script>
+</body>
+</html>
