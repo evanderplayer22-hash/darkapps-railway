@@ -1,28 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
     <title>DarkApps - <%= file.name %></title>
     <script async src="//www.popads.net/pop.js"></script>
-    <style>
-        body{background:linear-gradient(135deg,#000,#1a0033);color:#00ff88;font-family:'Courier New';text-align:center;padding:50px;}
-        .dlbox{background:rgba(0,0,0,0.9);max-width:600px;margin:0 auto;padding:50px;border:3px solid #00ff88;border-radius:20px;}
-        h1{font-size:2.5em;margin-bottom:20px;text-shadow:0 0 30px #00ff88;}
-        #timer{font-size:8em;background:linear-gradient(45deg,#ff0080,#ff6600);color:#000;border-radius:50%;width:250px;height:250px;margin:40px auto;display:flex;align-items:center;justify-content:center;font-weight:bold;}
-        @media(max-width:768px){#timer{font-size:5em;width:200px;height:200px;}}
-    </style>
+    <style>*{margin:0;padding:0;box-sizing:border-box;}body{background:linear-gradient(135deg,#000,#1a0033);color:#00ff88;font-family:'Courier New';text-align:center;padding:20px;min-height:100vh;}.dlbox{background:rgba(0,0,0,0.95);max-width:700px;margin:50px auto;padding:60px 40px;border:4px solid #00ff88;border-radius:30px;box-shadow:0 0 100px rgba(0,255,136,0.5);backdrop-filter:blur(20px);}h1{font-size:2.8em;margin-bottom:25px;text-shadow:0 0 40px #00ff88;word-break:break-word;}.file-info{font-size:1.5em;margin:30px 0;opacity:0.9;background:rgba(0,255,136,0.1);padding:20px;border-radius:15px;}#timer{font-size:10em;background:linear-gradient(45deg,#ff0080,#ff6600,#ffaa00);color:#000;border-radius:50%;width:300px;height:300px;margin:50px auto;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 0 80px rgba(255,100,0,0.6);animation:pulse 2s infinite;}@keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.05);}}.waiting{font-size:2em;margin:30px 0;}#dlbtn{background:linear-gradient(45deg,#00ff88,#00cc6a);color:#000;padding:30px 80px;font-size:28px;border:none;border-radius:60px;cursor:pointer;font-weight:bold;box-shadow:0 20px 50px rgba(0,255,136,0.6);transition:all .3s;}#dlbtn:hover{transform:translateY(-10px) scale(1.1);}@media(max-width:768px){#timer{font-size:6em;width:220px;height:220px;}.dlbox{padding:40px 20px;margin:20px;}h1{font-size:2em;}#dlbtn{padding:25px 50px;font-size:22px;}}</style>
 </head>
 <body>
     <div class="dlbox">
         <h1>📱 <%= file.name %></h1>
-        <p style="font-size:1.3em;margin:20px 0;"><%= Math.round(file.size/1024/1024) %> MB</p>
+        <div class="file-info">
+            📊 <%= Math.round(file.size/1024/1024) %> MB<br>
+            👁️ <%= file.views %> views • 💰 R$<%= file.earnings.toFixed(2) %>
+        </div>
         <div id="countdown" style="display:none;">
             <div id="timer">15</div>
-            <p style="font-size:1.5em;">⏳ Aguarde anúncios...</p>
+            <p class="waiting">⏳ Carregando anúncios...</p>
         </div>
-        <button id="dlbtn" onclick="startDL()">🚀 BAIXAR</button>
+        <button id="dlbtn">🚀 BAIXAR AGORA</button>
     </div>
     <script>
-        let time=15;function startDL(){document.getElementById('dlbtn').style.display='none';document.getElementById('countdown').style.display='block';let intv=setInterval(()=>{time--;document.getElementById('timer').textContent=time;if(time<=0){clearInterval(intv);window.location.href='/dl/<%= file.id %>/download';}},1000);}
+        let timeLeft=15;
+        const downloadUrl='<%= baseUrl %>/dl/<%= file.id %>/download';
+        document.getElementById('dlbtn').onclick=()=>{
+            try{popunder();}catch(e){}
+            document.getElementById('dlbtn').style.display='none';
+            document.getElementById('countdown').style.display='block';
+            let interval=setInterval(()=>{
+                timeLeft--;
+                document.getElementById('timer').textContent=timeLeft;
+                if(timeLeft<=0){
+                    clearInterval(interval);
+                    window.location.href=downloadUrl;
+                }
+            },1000);
+        };
     </script>
 </body>
 </html>
