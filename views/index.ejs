@@ -1,70 +1,78 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>🔥 DarkApps - R$0,20/Download</title>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
+    <title>🔥 DarkApps - R$0,20/Download</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:linear-gradient(135deg,#0a0a0a,#1a1a2e);color:#00ff88;font-family:'Courier New';}
-        .container{max-width:900px;margin:0 auto;padding:20px;}
-        .header{text-align:center;padding:40px 0;background:rgba(0,255,136,0.1);border-bottom:2px solid #00ff88;}
-        h1{font-size:3em;text-shadow:0 0 20px #00ff88;}
-        .upload-box{background:rgba(0,0,0,0.8);padding:40px;margin:30px 0;border:2px solid #00ff88;border-radius:15px;}
-        input[type=file]{width:100%;padding:20px;font-size:18px;background:#111;color:#00ff88;border:2px solid #00ff88;border-radius:10px;}
-        .btn{background:linear-gradient(45deg,#00ff88,#00cc6a);color:#000;padding:20px 50px;font-size:20px;border:none;border-radius:50px;cursor:pointer;font-weight:bold;}
-        .btn:hover{transform:scale(1.05);}
-        .success{background:rgba(0,255,0,0.2);border:2px solid #00ff88;padding:20px;margin:20px 0;border-radius:10px;}
-        #progress{display:none;background:#111;border:1px solid #00ff88;border-radius:10px;padding:10px;margin:10px 0;}
-    </style>
+    <style>*{margin:0;padding:0;box-sizing:border-box;}body{background:linear-gradient(135deg,#0a0a0a,#1a1a2e);color:#00ff88;font-family:'Courier New';min-height:100vh;}.container{max-width:900px;margin:0 auto;padding:20px;}.header{text-align:center;padding:50px 0;background:rgba(0,255,136,0.1);border-bottom:3px solid #00ff88;border-radius:20px;margin-bottom:40px;box-shadow:0 0 50px rgba(0,255,136,0.3);}h1{font-size:3.5em;text-shadow:0 0 30px #00ff88;margin-bottom:10px;}.subtitle{font-size:1.4em;opacity:0.9;}.upload-box{background:rgba(0,0,0,0.85);padding:50px;margin:30px 0;border:3px solid #00ff88;border-radius:25px;box-shadow:0 0 60px rgba(0,255,136,0.3);}.upload-title{text-align:center;font-size:2.2em;margin-bottom:40px;}#fileInput{width:100%;padding:25px;font-size:18px;background:#111;color:#00ff88;border:3px solid #00ff88;border-radius:15px;margin-bottom:30px;transition:all .3s;}#fileInput:hover{box-shadow:0 0 30px rgba(0,255,136,0.5);}.btn{background:linear-gradient(45deg,#00ff88,#00cc6a);color:#000;padding:25px 60px;font-size:22px;border:none;border-radius:50px;cursor:pointer;font-weight:bold;display:block;margin:0 auto;box-shadow:0 15px 40px rgba(0,255,136,0.4);transition:all .3s;}.btn:hover{transform:translateY(-5px) scale(1.05);box-shadow:0 25px 60px rgba(0,255,136,0.6);}.success{background:rgba(0,255,0,0.2);border:3px solid #00ff88;padding:30px;margin:30px 0;border-radius:20px;text-align:center;box-shadow:0 0 40px rgba(0,255,0,0.4);}.success-link{color:#00ff88;font-size:20px;word-break:break-all;background:rgba(0,0,0,0.5);padding:15px;border-radius:10px;display:inline-block;margin-top:15px;}#progress{display:none;background:#111;border:1px solid #00ff88;border-radius:10px;padding:10px;margin:10px 0;}</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔥 DARKAPPS</h1>
-            <p>APKs • MP4 • ZIP • R$0,20/Download + R$0,05/View</p>
-        </div>
-        
-        <% if(success) { %>
-        <div class="success">
-            ✅ Upload concluído!<br>
-            <strong>LINK:</strong> <a href="<%= link %>" target="_blank"><%= link %></a>
-        </div>
-        <% } %>
-        
-        <div class="upload-box">
-            <h2>📤 UPLOAD GRATUITO</h2>
-            <form id="uploadForm">
-                <input type="file" id="fileInput" accept=".apk,.zip,.rar,.mp4,.mp3,.exe" required>
-                <div id="progress">Uploading... <span id="progressText">0%</span></div>
-                <button type="submit" class="btn">🚀 ENVIAR</button>
-            </form>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>🔥 DARKAPPS</h1>
+        <p class="subtitle">APKs Premium • 512MB Grátis • R$0,20/Download + R$0,05/View</p>
     </div>
+    
+    <div id="successMsg" style="display:none;" class="success">
+        ✅ Upload concluído!<br>
+        <strong>🔗 LINK:</strong> <a id="downloadLink" href="#" class="success-link" target="_blank"></a>
+        <br><small>Compartilhe e ganhe R$0,20 por cada download!</small>
+    </div>
+    
+    <div class="upload-box">
+        <h2 class="upload-title">📤 UPLOAD GRATUITO</h2>
+        <form id="uploadForm">
+            <input type="file" id="fileInput" accept=".apk,.zip,.rar,.mp4,.mp3,.exe,.pdf" required>
+            <div id="progress">
+                <div style="width:0%;background:linear-gradient(45deg,#00ff88,#00cc6a);height:10px;border-radius:5px;transition:width .3s;"></div>
+            </div>
+            <button type="submit" class="btn">🚀 ENVIAR ARQUIVO</button>
+        </form>
+    </div>
+</div>
 
-    <script>
-        document.getElementById('uploadForm').onsubmit = async (e) => {
-            e.preventDefault();
-            const file = document.getElementById('fileInput').files[0];
-            const progress = document.getElementById('progress');
-            const progressText = document.getElementById('progressText');
-            
-            progress.style.display = 'block';
-            
-            const formData = new FormData();
-            formData.append('file', file);
-            
-            try {
-                await axios.post('/upload', formData, {
-                    onUploadProgress: (p) => {
-                        progressText.textContent = Math.round(p.loaded / p.total * 100) + '%';
-                    }
-                });
-                window.location.href = '/?success=true&link=' + encodeURIComponent(window.location.origin + '/dl/' + Math.random().toString(36).substr(2,8));
-            } catch(e) {
-                alert('Erro: ' + e.message);
+<script>
+document.getElementById('uploadForm').onsubmit = async (e) => {
+    e.preventDefault();
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    const progressBar = document.getElementById('progress').children[0];
+    const progressDiv = document.getElementById('progress');
+    const btn = document.querySelector('.btn');
+    const successMsg = document.getElementById('successMsg');
+    const downloadLink = document.getElementById('downloadLink');
+    
+    btn.disabled = true;
+    btn.textContent = '⏳ Enviando...';
+    progressDiv.style.display = 'block';
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    try {
+        const response = await axios.post('/upload', formData, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+            onUploadProgress: (progressEvent) => {
+                const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+                progressBar.style.width = percent + '%';
             }
-        };
-    </script>
+        });
+        
+        downloadLink.href = response.data.link;
+        downloadLink.textContent = response.data.link;
+        successMsg.style.display = 'block';
+        fileInput.value = '';
+        progressDiv.style.display = 'none';
+        window.scrollTo(0, 0);
+        
+    } catch (error) {
+        alert('❌ Erro: ' + (error.response?.data?.error || 'Tente novamente'));
+    } finally {
+        btn.disabled = false;
+        btn.textContent = '🚀 ENVIAR ARQUIVO';
+    }
+};
+</script>
 </body>
 </html>
